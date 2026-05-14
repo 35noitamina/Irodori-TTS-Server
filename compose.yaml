@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    image: irodori-openai-tts:local
+    command: ["/app/.venv/bin/python", "-m", "irodori_openai_tts"]
+    env_file:
+      - .env
+    ports:
+      - "${IRODORI_PORT:-8088}:${IRODORI_PORT:-8088}"
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+      - ./voices:/app/voices
+
+volumes:
+  hf_cache:

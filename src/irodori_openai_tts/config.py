@@ -50,8 +50,10 @@ class Settings(BaseSettings):
     default_min_seconds: float = 0.5
     default_max_seconds: float = 30.0
     default_cfg_scale_text: float = 3.0
+    default_cfg_scale_caption: float = 3.0
     default_cfg_scale_speaker: float = 5.0
     default_cfg_guidance_mode: str = "independent"
+    default_max_caption_len: int | None = None
     default_cfg_min_t: float = 0.5
     default_cfg_max_t: float = 1.0
     default_context_kv_cache: bool = True

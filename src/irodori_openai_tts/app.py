@@ -37,9 +37,9 @@ class IrodoriOptions(BaseModel):
     ref_wav: str | None = None
     ref_latent: str | None = None
     no_ref: bool | None = None
-    caption: str | None = None
+    text: str | None = None
     max_caption_len: int | None = None
-    cfg_scale_caption: float | None = None
+    caption_scale: float | None = None
     seconds: float | None = None
     duration_scale: float | None = None
     min_seconds: float | None = None
@@ -52,8 +52,8 @@ class IrodoriOptions(BaseModel):
     sway_coeff: float | None = None
     num_candidates: int | None = None
     decode_mode: Literal["sequential", "batch"] | None = None
-    cfg_scale_text: float | None = None
-    cfg_scale_speaker: float | None = None
+    text_scale: float | None = None
+    speaker_scale: float | None = None
     cfg_guidance_mode: Literal["independent", "joint", "alternating"] | None = None
     cfg_scale: float | None = None
     cfg_min_t: float | None = None
@@ -90,6 +90,7 @@ class SpeechRequest(BaseModel):
 
 
 settings = get_settings()
+print(settings)
 runtime_manager = RuntimeManager(settings)
 voice_registry = VoiceRegistry(settings)
 
@@ -772,7 +773,7 @@ def _build_sampling_request(payload: SpeechRequest, voice: VoiceSpec) -> Samplin
         seconds = _as_float(seconds, "seconds") / float(payload.speed)
 
     caption = _as_optional_str(
-        _coalesce(opts.caption, _extra(payload, "caption"), None),
+        _coalesce(opts.text, _extra(payload, "caption"), None),
         "caption",
     )
 
@@ -850,27 +851,27 @@ def _build_sampling_request(payload: SpeechRequest, voice: VoiceSpec) -> Samplin
         ),
         cfg_scale_text=_as_float(
             _coalesce(
-                opts.cfg_scale_text,
-                _extra(payload, "cfg_scale_text"),
-                settings.default_cfg_scale_text,
+                opts.text_scale,
+                _extra(payload, "text_scale"),
+                settings.default_text_scale,
             ),
-            "cfg_scale_text",
+            "text_scale",
         ),
         cfg_scale_caption=_as_float(
             _coalesce(
-                opts.cfg_scale_caption,
-                _extra(payload, "cfg_scale_caption"),
-                settings.default_cfg_scale_caption,
+                opts.caption_scale,
+                _extra(payload, "caption_scale"),
+                settings.default_caption_scale,
             ),
-            "cfg_scale_caption",
+            "caption_scale",
         ),
         cfg_scale_speaker=_as_float(
             _coalesce(
-                opts.cfg_scale_speaker,
-                _extra(payload, "cfg_scale_speaker"),
-                settings.default_cfg_scale_speaker,
+                opts.speaker_scale,
+                _extra(payload, "speaker_scale"),
+                settings.default_speaker_scale,
             ),
-            "cfg_scale_speaker",
+            "speaker_scale",
         ),
         cfg_guidance_mode=str(
             _coalesce(
